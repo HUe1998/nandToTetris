@@ -14,4 +14,7 @@ CHIP FullAdder {
 
     PARTS:
     // Put you code here:
+    HalfAdder(a=a, b=b, sum=generatedSum, carry=generatedCarry);        // generatedCarry = a.b
+    HalfAdder(a=generatedSum, b=c, sum=sum, carry=propogationCarry);    // propogationCarry = (aXorb).c
+    Or(a=generatedCarry, b=propogationCarry, out=carry);
 }
