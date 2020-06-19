@@ -11,10 +11,27 @@
  * else                    out[t+1] = out[t]
  */
 
+/**
+ *      inc(t)  load(t) reset(t)    |   regIn(t)
+ *      0       0       0           |   out(t)
+ *      1       0       0           |   out(t) + 1  (using increment)
+ *      -       1       0           |   in(t)
+ *      -       -       1           |   0
+ *
+*/
+
 CHIP PC {
     IN in[16],load,inc,reset;
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // set load of register to true to get 16 bit dff
+    Register(in=dffin, load=true, out=dffout, out=out, out=IncIn);
+    // Increment Mux
+    Inc16(in=IncIn, out=IncOut);
+    Mux16(a=dffout, b=IncOut, sel=inc, out=Muxinc);
+    // Input Mux
+    Mux16(a=Muxinc, b=in, sel=load, out=Muxload);
+    // Reset Mux
+    Mux16(a=Muxload, b=false, sel=reset, out=dffin);
 }
