@@ -27,5 +27,14 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // selection between ram or screen/keyboard
+    DMux(in=load, sel=address[14], a=RAMin, b=OTHERin);
+    Mux16(a=RAMout, b=OTHERout, sel=address[14], out=out);
+    // RAM
+    RAM16K(in=in, load=RAMin, address=address[0..13], out=RAMout);
+    // Others
+    DMux(in=OTHERin, sel=address[13], a=SCREENin);
+    Mux16(a=SCREENout, b=KBDout, sel=address[13], out=OTHERout);
+    Screen(in=in, load=SCREENin, address=address[0..12], out=SCREENout);
+    Keyboard(out=KBDout);
 }
