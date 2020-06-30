@@ -39,5 +39,37 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    // Note: PC output and addressM are 15 bits because RAM addressess are 15 bits
+    // A Register and Mux
+    Mux16(a=instruction, b=ALUout, sel=instruction[15], out=Ain);
+    // A load
+    Not(in=instruction[15], out=notOpcode);
+    Or(a=notOpcode, b=instruction[5], out=ALoadin);
+    ARegister(in=Ain, load=ALoadin, out=Aout, out[0..14]=addressM);
+    // A or M input to ALU
+    Mux16(a=Aout, b=inM, sel=instruction[12], out=ALUy);
+    // D Load
+    And(a=instruction[15], b=instruction[4], out=DLoadin);
+    // D Register
+    DRegister(in=ALUout, load=DLoadin, out=ALUx);
+    // ALU
+    ALU(x=ALUx, y=ALUy, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUout, out=outM, zr=zrout, ng=ngout);
+    // write to M?
+    And(a=instruction[3], b=instruction[15], out=writeM);
+    // PC
+    // Equality checkers for jump, eqj1=> j1=ng, eqj2=> j2=zr, eqj3=> j3=ng'
+    Xor(a=instruction[2], b=ngout, out=xor1);
+    Not(in=xor1, out=eqj1);
+    Xor(a=instruction[1], b=zrout, out=xor2);
+    Not(in=xor2, out=eqj2);
+    Xor(a=instruction[0], b=ngout, out=eqj3);
+    // j1.j2.j3
+    And(a=instruction[2], b=instruction[1], out=tempCombj);
+    And(a=tempCombj, b=instruction[0], out=Combj);
+    //eqj1.eqj2.eqj3
+    And(a=eqj1, b=eqj2, out=tempCombeqj);
+    And(a=tempCombeqj, b=eqj3, out=Combeqj);
+    // load input
+    Or(a=Combj, b=Combeqj, out=pcLoadin);
+    PC(in=Aout, load=pcLoadin, inc=true, reset=reset, out[0..14]=pc);
 }
