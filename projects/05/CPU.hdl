@@ -57,12 +57,15 @@ CHIP CPU {
     // write to M?
     And(a=instruction[3], b=instruction[15], out=writeM);
     // PC
-    // Equality checkers for jump, eqj1=> j1=ng, eqj2=> j2=zr, eqj3=> j3=ng'
+    // Equality checkers for jump, eqj1=> j1=ng, eqj2=> j2=zr, eqj3=> j3=!(ng+zr) (out>0)
     Xor(a=instruction[2], b=ngout, out=xor1);
     Not(in=xor1, out=eqj1);
     Xor(a=instruction[1], b=zrout, out=xor2);
     Not(in=xor2, out=eqj2);
-    Xor(a=instruction[0], b=ngout, out=eqj3);
+    // out>0 => !(ng + zr)
+    Or(a=ngout, b=zrout, out=ngorzr);
+    // a xor !b = a xnor b
+    Xor(a=instruction[0], b=ngorzr, out=eqj3);
     // j1.j2.j3
     And(a=instruction[2], b=instruction[1], out=tempCombj);
     And(a=tempCombj, b=instruction[0], out=Combj);
