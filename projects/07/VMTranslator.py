@@ -49,10 +49,8 @@ this_that_dict = {'0': 'THIS', '1': 'THAT'}
 
 
 def pointer(segm, num, ind):
-    return f"@{segm}\nD=M\n@addr{ind}\nM=D\n" + f"(LOOP{ind})\n" \
-           + f"@addr{ind}\nD=M\n@{segm}\nD=D-M\n@{num}\nD=D-A\n" \
-           + f"@END{ind}\nD;JGE\n" + f"@addr{ind}\nM=M+1\n" \
-           + f"@LOOP{ind}\n0;JMP\n" + f"(END{ind})\n"
+    return f"@{segm}\nD=M\n@addr{ind}\nM=D\n" + f"@{num}\nD=A\n" \
+           + f"@addr{ind}\nM=D+M\n"
 
 
 # Code Writer

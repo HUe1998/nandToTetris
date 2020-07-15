@@ -39,6 +39,22 @@ M=D
 @SP
 M=M+1
 // pop this 2
+@THIS
+D=M
+@addr5
+M=D
+@2
+D=A
+@addr5
+M=D+M
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@addr5
+A=M
+M=D
 // push constant 46
 @46
 D=A
@@ -48,6 +64,22 @@ M=D
 @SP
 M=M+1
 // pop that 6
+@THAT
+D=M
+@addr7
+M=D
+@6
+D=A
+@addr7
+M=D+M
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@addr7
+A=M
+M=D
 // push pointer 0
 @THIS
 D=M
@@ -81,6 +113,22 @@ M=D
 @SP
 M=M+1
 // push this 2
+@THIS
+D=M
+@addr11
+M=D
+@2
+D=A
+@addr11
+M=D+M
+@addr11
+A=M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 // sub
 @SP
 M=M-1
@@ -98,6 +146,22 @@ M=D
 @SP
 M=M+1
 // push that 6
+@THAT
+D=M
+@addr13
+M=D
+@6
+D=A
+@addr13
+M=D+M
+@addr13
+A=M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 // add
 @SP
 M=M-1
